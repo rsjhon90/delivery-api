@@ -1,0 +1,18 @@
+{
+  "name": "delivery-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "rsjhon90 <rsjhony@hotmail.com>",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon --inspect src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7",
+    "winston": "^3.3.3"
+  }
+}
