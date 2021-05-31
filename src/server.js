@@ -1,6 +1,6 @@
 import express from 'express';
 import { logger } from './logger.js';
-import router from './routes/orders.routes.js';
+import router from './routes/pedidos.routes.js';
 
 const app = express();
 app.use(express.json());

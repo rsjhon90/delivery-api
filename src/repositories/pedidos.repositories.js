@@ -3,18 +3,18 @@ import { promises as fs } from 'fs';
 const { readFile, writeFile } = fs;
 const dataPath = './src/data/pedidos.json';
 
-async function getOrders() {
+async function getPedidos() {
   const data = JSON.parse(await readFile(dataPath));
 
   return data;
 };
 
-async function insertOrder(data) {
+async function insertPedido(data) {
   await writeFile(
     dataPath, JSON.stringify(data, null, 2))
 };
 
 export default {
-  getOrders,
-  insertOrder
+  getPedidos,
+  insertPedido
 };

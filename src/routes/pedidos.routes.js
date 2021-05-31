@@ -1,13 +1,14 @@
 import { Router } from 'express';
-import ordersController from '../controller/orders.controller.js';
+import pedidosController from '../controller/pedidos.controller.js';
 import { logger, logRequests } from '../logger.js';
 
 const router = Router();
 
 router.use(logRequests);
 
-router.post('/', ordersController.createOrder);
-router.put('/update/:id', ordersController.updateOrder);
+router.post('/', pedidosController.createPedido);
+router.put('/update/:id', pedidosController.updatePedido);
+router.patch('/update/:id', pedidosController.updateEntrega);
 
 router.use((err, request, response, next) => {
   const { method, url } = request;
