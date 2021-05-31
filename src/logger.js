@@ -6,7 +6,7 @@ const myFormat = printf(({ level, message, label, timestamp }) => {
   return `${timestamp} [${label}] ${level}: ${message}`;
 })
 
-const logger = winston.createLogger({
+export const logger = winston.createLogger({
   level: "silly",
   transports: [
     new (winston.transports.Console)(),
@@ -19,4 +19,12 @@ const logger = winston.createLogger({
   )
 });
 
-export default logger;
+export function logRequests(request, response, next) {
+  const { method, url } = request;
+
+  const logLabel = `[${method.toUpperCase()}] url:${url}`;
+
+  logger.info(logLabel);
+
+  next();
+}
