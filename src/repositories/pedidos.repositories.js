@@ -14,7 +14,17 @@ async function insertPedido(data) {
     dataPath, JSON.stringify(data, null, 2))
 };
 
+async function deletePedito(index) {
+  const data = await getPedidos();
+
+  data.pedidos.splice(index, 1)
+
+  await writeFile(
+    dataPath, JSON.stringify(data, null, 2))
+};
+
 export default {
   getPedidos,
-  insertPedido
+  insertPedido,
+  deletePedito
 };
