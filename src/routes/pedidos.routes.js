@@ -12,6 +12,8 @@ router.patch('/pedidos/update/:id', pedidosController.updateEntrega);
 router.delete('/pedidos/:id', pedidosController.deletePedito);
 router.get('/pedidos/:id', pedidosController.getPedido);
 router.get('/clientes', pedidosController.getCliente)
+router.get('/produtos', pedidosController.getProdutos);
+router.get('/produtos/rank', pedidosController.rankProdutos)
 
 router.use((err, request, response, next) => {
   const { method, url } = request;

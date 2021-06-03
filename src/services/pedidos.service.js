@@ -1,4 +1,6 @@
 import pedidosRepositories from '../repositories/pedidos.repositories.js';
+import sortArraySet from '../utility/sortArraySet.js';
+import { writeFile } from 'fs/promises';
 
 const data = await pedidosRepositories.getPedidos();
 
@@ -8,11 +10,11 @@ async function createPedido(pedidoRequest) {
 
   const pedido = {
     id: data.nextId++,
-    cliente, 
-    produto, 
+    cliente,
+    produto,
     valor,
     entregue: false,
-    timestamp 
+    timestamp
   }
 
   data.pedidos.push(pedido);
@@ -24,11 +26,11 @@ async function createPedido(pedidoRequest) {
 
 async function updatePedido(pedidoRequest) {
   const { id,
-    cliente, 
-    produto, 
-    valor, 
+    cliente,
+    produto,
+    valor,
     entregue
-    } = pedidoRequest;
+  } = pedidoRequest;
 
   const index = data.pedidos.findIndex(pedido => pedido.id === parseInt(id));
 
@@ -89,7 +91,7 @@ async function getCliente(requestCliente) {
   const pedido = pedidos.find(
     (pedido) => pedido.cliente === requestCliente);
 
-  if(!pedido) {
+  if (!pedido) {
     throw new Error('Cliente não encontrado')
   };
 
@@ -97,12 +99,60 @@ async function getCliente(requestCliente) {
     (pedido) => pedido.entregue == true && pedido.cliente == requestCliente)
     .map(pedido => pedido.valor)
     .reduce((valorAcumulado, valorAtual) => {
-    return valorAcumulado + valorAtual;
+      return valorAcumulado + valorAtual;
     }, 0);
 
-  const filteredCliente = `${pedido.cliente} gastou um total de $ ${gastoTotal}`;  
+  const filteredCliente = `${pedido.cliente} gastou um total de $ ${gastoTotal}`;
 
   return filteredCliente;
+};
+
+async function getProdutos(requestProduto) {
+  const { pedidos } = data;
+
+  const pedido = pedidos.find(
+    (pedido) => pedido.produto === requestProduto);
+
+  if (!pedido) {
+    throw new Error('Produto não encontrado')
+  };
+
+  const gastoTotal = pedidos.filter(
+    (pedido) => pedido.entregue == true && pedido.produto == requestProduto)
+    .map(pedido => pedido.valor)
+    .reduce((valorAcumulado, valorAtual) => {
+      return valorAcumulado + valorAtual;
+    }, 0);
+
+  const filteredCliente = `O produto ${pedido.produto} vendeu o equivalente a $ ${gastoTotal}`;
+
+  return filteredCliente;
+};
+
+async function rankProdutos() {
+  const { pedidos } = data;
+
+  let produtosList = [];
+
+  for (let pedido of pedidos) {
+    const index = produtosList.findIndex(list => list.produto === pedido.produto);
+
+    if(pedido.entregue === true) {
+      if(index < 0) {
+        produtosList.push({ produto: pedido.produto, qt: 1 })
+      } else {
+        produtosList[index].qt++;
+      }
+    }
+  }
+
+  const rankProdutos = produtosList.sort(
+    (list1, list2) => list2.qt - list1.qt)
+  .map(list => `${list.produto} - ${list.qt}`)
+  
+  
+
+  return rankProdutos;
 }
 
 export default {
@@ -111,5 +161,7 @@ export default {
   updateEntrega,
   deletePedito,
   getPedido,
-  getCliente
+  getCliente,
+  getProdutos,
+  rankProdutos
 }

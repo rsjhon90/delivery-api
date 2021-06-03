@@ -116,11 +116,41 @@ async function getCliente(request, response, next) {
   };
 };
 
+async function getProdutos(request, response, next) {
+  try {
+    const { produto } = request.body;
+
+    if(produto == null) {
+      throw new Error('Campo produto é obrigatório')
+    } else if (produto == Number) {
+      throw new Error('Formato de dados incorretos')
+    };
+
+    const resultProduto = await pedidosService.getProdutos(produto);
+
+    return response.json(resultProduto);
+  } catch (err) {
+    next(err)
+  };
+};
+
+async function rankProdutos(request, response, next) {
+  try {
+    const rankProdutos = await pedidosService.rankProdutos();
+
+    return response.json(rankProdutos);
+  } catch (err) {
+    next(err)
+  }
+}
+
 export default {
   createPedido,
   updatePedido,
   updateEntrega,
   deletePedito,
   getPedido,
-  getCliente
+  getCliente,
+  getProdutos,
+  rankProdutos
 };
